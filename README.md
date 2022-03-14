@@ -11,5 +11,18 @@ npm install animate-js
 ### use
 
 ```
-JsAnimate(draw, 10000)
+const JSAnimate = require("animate-js")
+
+JSAnimate(draw, 10000)
+```
+
+### hooks
+
+```
+import { easeIn, useAnimate } from 'animate-js'
+
+const [animate] = useAnimate(draw, 10000, {
+    count: 1,
+    timing: easeIn
+})
 ```
