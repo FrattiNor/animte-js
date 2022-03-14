@@ -45,10 +45,10 @@ JSAnimate(draw, duration, option)
 
 ### animate 对象
 
-| 属性     | 说明     | 类型        | 版本   |
-| :------- | :------- | :---------- | :----- |
-| reset    | 重置     | () => void  | v1.0.0 |
-| pause    | 暂停     | () => state | v1.0.0 |
-| play     | 播放     | () => state | v1.0.0 |
-| state    | 动画状态 |             | v1.0.0 |
-| progress | 动画进度 |             | v1.0.0 |
+| 属性     | 说明     | 类型                                   | 版本   |
+| :------- | :------- | :------------------------------------- | :----- |
+| reset    | 重置     | () => void                             | v1.0.0 |
+| pause    | 暂停     | () => state                            | v1.0.0 |
+| play     | 播放     | () => state                            | v1.0.0 |
+| state    | 动画状态 | 'playing' , 'paused' , 'start' , 'end' | v1.0.0 |
+| progress | 动画进度 | number                                 | v1.0.0 |
