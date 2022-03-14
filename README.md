@@ -8,7 +8,7 @@ JS 动画
 npm install animate-js
 ```
 
-### use
+### Usage
 
 ```
 const JSAnimate = require("animate-js")
@@ -16,7 +16,7 @@ const JSAnimate = require("animate-js")
 JSAnimate(draw, 10000)
 ```
 
-### hooks
+### Hooks
 
 ```
 import { easeIn, useAnimate } from 'animate-js'
