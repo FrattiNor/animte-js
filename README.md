@@ -2,12 +2,6 @@
 
 JS 动画
 
-### Install
-
-```
-npm install animate-js
-```
-
 ### Usage
 
 ```
