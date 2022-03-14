@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
-import { useAnimateData, Option, State, Draw } from './types'
 import { judge } from './animate'
 import { linear } from './timing'
+import { useAnimateData, Option, State, Draw } from './types'
 
 const useAnimate = (draw: Draw, duration: number, _option?: Option) => {
     // 记录requestAnimationFrame
@@ -23,7 +23,15 @@ const useAnimate = (draw: Draw, duration: number, _option?: Option) => {
     // 当前的Progress
     const [currentProgress, setCurrentProgress] = useState(0)
     // 动画状态
-    const [state, setState] = useState<State>('default')
+    const [state, setState] = useState<State>('start')
+    // 是否执行过start
+    const [isStart, setIsStart] = useState(false)
+    // 动画开始钩子函数
+    const onStart = typeof option.onStart === 'function' ? option.onStart : null
+    // 是否执行过end
+    const [isEnd, setIsEnd] = useState(false)
+    // 动画结束钩子函数
+    const onEnd = typeof option.onEnd === 'function' ? option.onEnd : null
 
     // 动画函数
     const animate = (time: number) => {
@@ -40,6 +48,11 @@ const useAnimate = (draw: Draw, duration: number, _option?: Option) => {
         // 根据进度绘制，延迟时进度小于0，需要绘制首帧
         if (progress >= 0) {
             draw(timingProgress)
+            // start
+            if (onStart !== null && !isStart) {
+                onStart()
+            }
+            setIsStart(true)
         } else if (!drawn) {
             setDrawn(true)
             draw(0)
@@ -56,6 +69,13 @@ const useAnimate = (draw: Draw, duration: number, _option?: Option) => {
             setCurrentProgress(0)
             setStart(window.performance.now())
             timeout.current = window.requestAnimationFrame(animate)
+        } else {
+            if (onEnd !== null && !isEnd) {
+                // end
+                onEnd()
+            }
+            setState('end')
+            setIsEnd(true)
         }
     }
 
@@ -80,6 +100,20 @@ const useAnimate = (draw: Draw, duration: number, _option?: Option) => {
         }
     }
 
+    const reset = () => {
+        if (state !== 'start') {
+            if (timeout.current !== null) window.cancelAnimationFrame(timeout.current)
+            setState('start')
+            setDelay(0)
+            setDrawn(false)
+            setBeforeProgress(0)
+            setCount(typeof option.count === 'number' || option.count === 'infinite' ? option.count : 1)
+            setIsStart(false)
+            setIsEnd(false)
+            play()
+        }
+    }
+
     // state 改变回调，开启下一帧绘画，需要在状态更改后
     useEffect(() => {
         if (state === 'playing') {
@@ -95,6 +129,7 @@ const useAnimate = (draw: Draw, duration: number, _option?: Option) => {
     }, [])
 
     const res: useAnimateData = {
+        reset,
         pause,
         play,
         state,
