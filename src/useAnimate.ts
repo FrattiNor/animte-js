@@ -43,15 +43,11 @@ const useAnimate = (draw: Draw, duration: number, _option?: Option) => {
         if (progress >= 0) {
             setCurrentProgress(progress)
         }
-        // 根据timing函数获取进度（实现 ease等效果）
-        const timingProgress = timing !== null ? timing(progress) : linear(progress)
         // 根据进度绘制，延迟时进度小于0，需要绘制首帧
         if (progress >= 0) {
+            // 根据timing函数获取进度（实现 ease等效果）
+            const timingProgress = timing !== null ? timing(progress) : linear(progress)
             draw(timingProgress)
-            // start
-            if (onStart !== null && !isStart) {
-                onStart()
-            }
             setIsStart(true)
         } else if (!drawn) {
             setDrawn(true)
@@ -70,10 +66,6 @@ const useAnimate = (draw: Draw, duration: number, _option?: Option) => {
             setStart(window.performance.now())
             timeout.current = window.requestAnimationFrame(animate)
         } else {
-            if (onEnd !== null && !isEnd) {
-                // end
-                onEnd()
-            }
             setState('end')
             setIsEnd(true)
         }
@@ -120,6 +112,18 @@ const useAnimate = (draw: Draw, duration: number, _option?: Option) => {
             timeout.current = window.requestAnimationFrame(animate)
         }
     }, [state])
+
+    useEffect(() => {
+        if (isStart && onStart !== null) {
+            onStart()
+        }
+    }, [isStart])
+
+    useEffect(() => {
+        if (isEnd && onEnd !== null) {
+            onEnd()
+        }
+    }, [isEnd])
 
     // 默认播放
     useEffect(() => {

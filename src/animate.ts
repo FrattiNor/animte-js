@@ -53,10 +53,10 @@ const JsAnimate = (draw: Draw, duration: number, _option?: Option) => {
             if (progress > 1) progress = 1
             // 记录当前进度(小于0为延迟，不记录)
             if (progress >= 0) currentProgress = progress
-            // 根据timing函数获取进度（实现 ease等效果）
-            const timingProgress = timing !== null ? timing(progress) : linear(progress)
             // 根据进度绘制，延迟时进度小于0，需要绘制首帧
             if (progress >= 0) {
+                // 根据timing函数获取进度（实现 ease等效果）
+                const timingProgress = timing !== null ? timing(progress) : linear(progress)
                 draw(timingProgress)
                 // start
                 if (onStart !== null && !isStart) {
